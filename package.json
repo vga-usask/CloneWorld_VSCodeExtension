@@ -11,7 +11,9 @@
 	],
 	"activationEvents": [
 		"onCommand:cloneWorld.setReportPath",
-		"onCommand:cloneWorld.showReportPath"
+		"onCommand:cloneWorld.showReportPath",
+		"onCommand:cloneWorld.showReport",
+		"onCommand:cloneWorld.findClonesInSameClass"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -23,8 +25,24 @@
 			{
 				"command": "cloneWorld.showReportPath",
 				"title": "Show Report Path"
+			},
+			{
+				"command": "cloneWorld.showReport",
+				"title": "Show Report"
+			},
+			{
+				"command": "cloneWorld.findClonesInSameClass",
+				"title": "Find Clones in Same Class"
 			}
-		]
+		],
+		"menus": {
+			"editor/context": [
+				{
+					"command": "cloneWorld.findClonesInSameClass",
+					"group": "navigation"
+				}
+			]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
@@ -43,5 +61,9 @@
 		"typescript": "^3.3.1",
 		"tslint": "^5.12.1",
 		"vscode-test": "^1.0.0-next.0"
+	},
+	"dependencies": {
+		"fs": "0.0.1-security",
+		"path": "^0.12.7"
 	}
 }

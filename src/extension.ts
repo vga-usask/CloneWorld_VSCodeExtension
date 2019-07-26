@@ -16,6 +16,8 @@ export function activate(context: vscode.ExtensionContext) {
 	// The commandId parameter must match the command field in package.json
 	context.subscriptions.push(vscode.commands.registerCommand('cloneWorld.setReportPath', MyCommands.setReportPath(context)));
 	context.subscriptions.push(vscode.commands.registerCommand('cloneWorld.showReportPath', MyCommands.showReportPath(context)));
+	context.subscriptions.push(vscode.commands.registerCommand('cloneWorld.showReport', MyCommands.showReport(context)));
+	context.subscriptions.push(vscode.commands.registerCommand('cloneWorld.findClonesInSameClass', MyCommands.findClonesInSameClass(context)));
 }
 
 // this method is called when your extension is deactivated

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Parallel Coordinate</title>
+
+    <link rel="stylesheet" type="text/css" href="./parcoords.css">
+    <script src="./parcoords.standalone.js"></script>
+    <script src="./d3.min.js"></script>
+</head>
+
+<body>
+    <div>
+        <input id="ignore-unchanged-clone-input" type="checkbox"
+            onchange="isIgnoringUnchangedClonesInputChangeHandler()">
+        <label>Ignore Unchanged Clones</label>
+        <br />
+        <button onclick="resetData()">Reset</button>
+    </div>
+    <div id="pc-container" class="parcoords" style="height: 150px;"></div>
+    <div id="clone-picker">
+        <label>Brushed Clones</label>
+        <ul id="clone-picker-list">
+        </ul>
+    </div>
+    <script src="./main.js"></script>
+</body>
+
+</html>
