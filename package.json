@@ -10,14 +10,19 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.helloWorld"
+		"onCommand:cloneWorld.setReportPath",
+		"onCommand:cloneWorld.showReportPath"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.helloWorld",
-				"title": "Hello World"
+				"command": "cloneWorld.setReportPath",
+				"title": "Set Report Path"
+			},
+			{
+				"command": "cloneWorld.showReportPath",
+				"title": "Show Report Path"
 			}
 		]
 	},
