@@ -10,6 +10,7 @@
 		"Other"
 	],
 	"activationEvents": [
+		"onCommand:cloneWorld.generateReport",
 		"onCommand:cloneWorld.setReportPath",
 		"onCommand:cloneWorld.showReportPath",
 		"onCommand:cloneWorld.showReport",
@@ -18,6 +19,10 @@
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
+			{
+				"command": "cloneWorld.generateReport",
+				"title": "Generate Report"
+			},
 			{
 				"command": "cloneWorld.setReportPath",
 				"title": "Set Report Path"
@@ -42,6 +47,16 @@
 					"group": "navigation"
 				}
 			]
+		},
+		"configuration": {
+			"title": "Clone World",
+			"properties": {
+				"nicad.path": {
+					"type": "string",
+					"default": null,
+					"description": "Specifies the folder path of NiCad to use."
+				}
+			}
 		}
 	},
 	"scripts": {

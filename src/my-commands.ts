@@ -7,6 +7,61 @@ export class MyCommands {
 
     static parallelCoordinatePanel: vscode.WebviewPanel | undefined;
 
+
+    static generateReport(context: vscode.ExtensionContext) {
+        return async () => {
+            let sourceDirectory = vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath.replace(/\\/g, '/') : undefined;
+            let sourceBranchName: string | undefined;
+            let nicadDirectory = (vscode.workspace.getConfiguration().get('nicad.path') as string).replace(/\\/g, '/');
+            let nicadGranularity: string | undefined;
+            let nicadLanguage: string | undefined;
+            let outputPath: string | undefined;
+
+            sourceBranchName = await vscode.window.showInputBox({ placeHolder: 'Source Branch Name' });
+            nicadGranularity = await vscode.window.showQuickPick(['blocks', 'functions'], { placeHolder: 'NiCad Granularity' });
+            nicadLanguage = await vscode.window.showQuickPick(['c', 'java', 'python', 'csharp'], { placeHolder: 'NiCad Language' });
+
+            if ((await vscode.window.showQuickPick(['Pick from File Picker'], { placeHolder: 'Output Path' })) === 'Pick from File Picker') {
+                let dirList = await vscode.window.showOpenDialog({
+                    canSelectFolders: true
+                });
+                if (dirList) {
+                    outputPath = (dirList as unknown as vscode.Uri[])[0].fsPath.replace(/\\/g, '/');
+
+                    const terminal = vscode.window.createTerminal({
+                        name: 'Generate Report',
+                        cwd: path.join(context.extensionPath.replace(/\\/g, '/'), 'scripts', 'generate-report')
+                    });
+                    terminal.show();
+                    if (process.platform === 'win32') {
+                        terminal.sendText('$sourceDirectory=$(wsl wslpath "' + sourceDirectory + '")');
+                        terminal.sendText('$nicadDirectory=$(wsl wslpath "' + nicadDirectory + '")');
+                        terminal.sendText('$outputPath=$(wsl wslpath "' + outputPath + '")');
+                        terminal.sendText(
+                            'wsl ./run.sh ' +
+                            '$sourceDirectory ' +
+                            sourceBranchName + ' ' +
+                            '$nicadDirectory ' +
+                            nicadGranularity + ' ' +
+                            nicadLanguage + ' ' +
+                            '$outputPath'
+                        );
+                    } else {
+                        terminal.sendText(
+                            './run.sh ' +
+                            '"' + sourceDirectory + '" ' +
+                            sourceBranchName + ' ' +
+                            '"' + nicadDirectory + '" ' +
+                            nicadGranularity + ' ' +
+                            nicadLanguage + ' ' +
+                            '"' + outputPath + '"'
+                        );
+                    }
+                }
+            }
+        };
+    }
+
     static setReportPath(context: vscode.ExtensionContext) {
         return async () => {
             if ((await vscode.window.showQuickPick(['Pick from File Picker'], { placeHolder: 'Report Path' })) === 'Pick from File Picker') {
