@@ -1,20 +1,26 @@
 # show help of arguments
 if [ "$#" -eq 0 ] || [ "$1" == "-h" ] || [ "$1" == "--help" ]
 then
-  echo "Argument help: <SOURCE_DIRECTORY> <SOURCE_BRANCH_NAME> <NICAD_DIRECTORY> <NICAD_GRANULARITY> <NICAD_LANG> <OUTPUT_PATH>"
+  echo "Argument help: <SOURCE_DIRECTORY> <SOURCE_BRANCH_NAME> <NICAD_GRANULARITY> <NICAD_LANG> <OUTPUT_PATH>"
   exit 0
 fi
 
 SOURCE_DIRECTORY=$1
 SOURCE_BRANCH_NAME=$2
-NICAD_DIRECTORY=$3
-NICAD_GRANULARITY=$4
-NICAD_LANG=$5
-OUTPUT_PATH=$6
+NICAD_GRANULARITY=$3
+NICAD_LANG=$4
+OUTPUT_PATH=$5
 
+NICAD_DIRECTORY="$(pwd)/NiCad-5.2"
 NICAD_SYSTEMS_DIRECTORY=$NICAD_DIRECTORY/systems
 
 # TODO check make, gcc, txl
+
+if ! [ -d "$NICAD_DIRECTORY" ]
+then
+  echo "Extracting NiCad..."
+  tar xvzf ./NiCad-5.2.tar.gz > /dev/null
+fi
 
 # check if NiCad has been compiled; if not, compile it with make
 if [ ! -x $NICAD_DIRECTORY/tools/clonepairs.x ]

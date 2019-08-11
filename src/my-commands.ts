@@ -12,7 +12,6 @@ export class MyCommands {
         return async () => {
             let sourceDirectory = vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.fsPath.replace(/\\/g, '/') : undefined;
             let sourceBranchName: string | undefined;
-            let nicadDirectory = (vscode.workspace.getConfiguration().get('nicad.path') as string).replace(/\\/g, '/');
             let nicadGranularity: string | undefined;
             let nicadLanguage: string | undefined;
             let outputPath: string | undefined;
@@ -30,18 +29,16 @@ export class MyCommands {
 
                     const terminal = vscode.window.createTerminal({
                         name: 'Generate Report',
-                        cwd: path.join(context.extensionPath.replace(/\\/g, '/'), 'scripts', 'generate-report')
+                        cwd: path.join(context.extensionPath.replace(/\\/g, '/'), 'scripts', 'report-generator')
                     });
                     terminal.show();
                     if (process.platform === 'win32') {
                         terminal.sendText('$sourceDirectory=$(wsl wslpath "' + sourceDirectory + '")');
-                        terminal.sendText('$nicadDirectory=$(wsl wslpath "' + nicadDirectory + '")');
                         terminal.sendText('$outputPath=$(wsl wslpath "' + outputPath + '")');
                         terminal.sendText(
                             'wsl ./run.sh ' +
                             '$sourceDirectory ' +
                             sourceBranchName + ' ' +
-                            '$nicadDirectory ' +
                             nicadGranularity + ' ' +
                             nicadLanguage + ' ' +
                             '$outputPath'
@@ -51,7 +48,6 @@ export class MyCommands {
                             './run.sh ' +
                             '"' + sourceDirectory + '" ' +
                             sourceBranchName + ' ' +
-                            '"' + nicadDirectory + '" ' +
                             nicadGranularity + ' ' +
                             nicadLanguage + ' ' +
                             '"' + outputPath + '"'
