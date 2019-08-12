@@ -36,7 +36,7 @@ export class MyCommands {
                         terminal.sendText('$sourceDirectory=$(wsl wslpath "' + sourceDirectory + '")');
                         terminal.sendText('$outputPath=$(wsl wslpath "' + outputPath + '")');
                         terminal.sendText(
-                            'wsl ./run.sh ' +
+                            'wsl ./initialize.sh ' +
                             '$sourceDirectory ' +
                             sourceBranchName + ' ' +
                             nicadGranularity + ' ' +
@@ -45,7 +45,7 @@ export class MyCommands {
                         );
                     } else {
                         terminal.sendText(
-                            './run.sh ' +
+                            './initialize.sh ' +
                             '"' + sourceDirectory + '" ' +
                             sourceBranchName + ' ' +
                             nicadGranularity + ' ' +
@@ -113,7 +113,8 @@ export class MyCommands {
                     MyCommands.parallelCoordinatePanel = panel;
 
                     const html = fs.readFileSync(path.join(onDiskPath.fsPath, 'index.html'), 'utf8');
-                    MyCommands.parallelCoordinatePanel.webview.html = html.replace(/\.\//g, 'vscode-resource:/' + onDiskPath.fsPath.replace(/\\/g, '/') + '/');
+                    const prefix = onDiskPath.fsPath.replace(/\\/g, '/').substring(0, 1) === '/' ? 'vscode-resource:' : 'vscode-resource:/';
+                    MyCommands.parallelCoordinatePanel.webview.html = html.replace(/\.\//g, prefix + onDiskPath.fsPath.replace(/\\/g, '/') + '/');
 
                     MyCommands.parallelCoordinatePanel.webview.onDidReceiveMessage(
                         async message => {
@@ -137,9 +138,12 @@ export class MyCommands {
                     MyCommands.parallelCoordinatePanel.onDidDispose(() => MyCommands.parallelCoordinatePanel = undefined);
                 }
 
-                MyCommands.parallelCoordinatePanel.webview.postMessage({
-                    cloneReport: cloneReport
-                });
+                const webview = MyCommands.parallelCoordinatePanel.webview;
+                setTimeout(() => {
+                    webview.postMessage({
+                        cloneReport: cloneReport
+                    });
+                }, 100);
             }
         };
     }

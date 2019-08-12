@@ -131,3 +131,14 @@ do
 done < "$INPUT_FILE_PATH"
 
 python3 ./mapping.py "systems/source" 0  `expr $REVISION_COUNT - 1` "$OUTPUT_PATH/temp/reports" "$OUTPUT_PATH/temp/changes" "$OUTPUT_PATH"
+
+
+# save the NiCad parameters
+if [ -f "$OUTPUT_PATH/nicad-params" ]
+then
+  rm -f "$OUTPUT_PATH/nicad-params"
+fi
+
+echo $SOURCE_BRANCH_NAME >> "$OUTPUT_PATH/nicad-params"
+echo $NICAD_GRANULARITY >> "$OUTPUT_PATH/nicad-params"
+echo $NICAD_LANG >> "$OUTPUT_PATH/nicad-params"
