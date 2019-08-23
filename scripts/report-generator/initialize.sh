@@ -142,3 +142,4 @@ fi
 echo $SOURCE_BRANCH_NAME >> "$OUTPUT_PATH/nicad-params"
 echo $NICAD_GRANULARITY >> "$OUTPUT_PATH/nicad-params"
 echo $NICAD_LANG >> "$OUTPUT_PATH/nicad-params"
+echo $OUTPUT_PATH >> "$OUTPUT_PATH/nicad-params"

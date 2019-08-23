@@ -233,12 +233,17 @@ while revision_id < max_revision:
                         assign_global_id(revision_id, clone_in_new_revision)
 
 
+# try:
+#     shutil.rmtree(output_path)
+# except OSError:
+#     pass
+# finally:
+#     os.mkdir(output_path)
+
 try:
-    shutil.rmtree(output_path)
+    os.remove("./*.json")
 except OSError:
     pass
-finally:
-    os.mkdir(output_path)
 
 with open(output_path + '/clone_map.json', 'w+') as fp:
     json.dump(map_clone, fp)

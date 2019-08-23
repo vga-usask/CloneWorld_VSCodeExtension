@@ -30,6 +30,12 @@ if(previousState){
     initialize();
 }
 
+function refresh(){
+    vscode.postMessage({
+        command: 'refresh'
+    });
+}
+
 function initialize() {
     let chartData = generateChartData();
     if (searchingFilePath && searchingLineNumber) {
@@ -147,6 +153,12 @@ function generateDimensions(pc, minRevision, maxRevision, data, filter) {
             };
         }
     }
+    // dimensions[maxRevision] = {
+    //     type: 'number',
+    //     yscale: scale,
+    //     ticks: 0
+    // };
+
     dimensions[d3.min(Object.keys(dimensions), d => parseInt(d))].ticks = 10;
     dimensions[d3.min(Object.keys(dimensions), d => parseInt(d))].orient = 'left';
     dimensions[d3.max(Object.keys(dimensions), d => parseInt(d))].ticks = 10;

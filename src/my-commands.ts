@@ -83,16 +83,7 @@ export class MyCommands {
     static showReport(context: vscode.ExtensionContext) {
         return async () => {
             let reportPath = context.workspaceState.get('reportPath');
-            let cloneReport: CloneReport | undefined;
-
-            if (reportPath) {
-                cloneReport = new CloneReport(
-                    JSON.parse(fs.readFileSync(reportPath + '/clone_map.json', 'utf8')),
-                    JSON.parse(fs.readFileSync(reportPath + '/global_id_map.json', 'utf8'))
-                );
-            } else {
-                vscode.window.showErrorMessage('Report Path has not been set.');
-            }
+            let cloneReport = MyCommands.obtainCloneReport(reportPath);
 
             if (cloneReport) {
                 if (MyCommands.parallelCoordinatePanel) {
@@ -130,6 +121,11 @@ export class MyCommands {
                                         });
                                     }
                                     return;
+                                case 'refresh':
+                                    webview.postMessage({
+                                        cloneReport: MyCommands.obtainCloneReport(reportPath)
+                                    });
+                                    break;
                             }
                         },
                         undefined,
@@ -146,6 +142,15 @@ export class MyCommands {
                 }, 100);
             }
         };
+    }
+
+    private static obtainCloneReport(reportPath: unknown) {
+        if (reportPath) {
+            return new CloneReport(JSON.parse(fs.readFileSync(reportPath + '/clone_map.json', 'utf8')), JSON.parse(fs.readFileSync(reportPath + '/global_id_map.json', 'utf8')));
+        }
+        else {
+            vscode.window.showErrorMessage('Report Path has not been set.');
+        }
     }
 
     static findClonesInSameClass(context: vscode.ExtensionContext) {
