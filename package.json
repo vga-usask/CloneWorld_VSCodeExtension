@@ -21,23 +21,23 @@
 		"commands": [
 			{
 				"command": "cloneWorld.generateReport",
-				"title": "Generate Report"
+				"title": "CloneWorld: Generate Report"
 			},
 			{
 				"command": "cloneWorld.setReportPath",
-				"title": "Set Report Path"
+				"title": "CloneWorld: Set Report Path"
 			},
 			{
 				"command": "cloneWorld.showReportPath",
-				"title": "Show Report Path"
+				"title": "CloneWorld: Show Report Path"
 			},
 			{
 				"command": "cloneWorld.showReport",
-				"title": "Show Report"
+				"title": "CloneWorld: Show Report"
 			},
 			{
 				"command": "cloneWorld.findClonesInSameClass",
-				"title": "Find Clones in Same Class"
+				"title": "CloneWorld: Find Clones in Same Class"
 			}
 		],
 		"menus": {
