@@ -89,10 +89,10 @@ export class MyCommands {
                 if (MyCommands.parallelCoordinatePanel) {
                     MyCommands.parallelCoordinatePanel.reveal();
                 } else {
-                    const onDiskPath = vscode.Uri.file(path.join(context.extensionPath, 'webviews', 'parallel-coordinate'));
+                    const onDiskPath = vscode.Uri.file(path.join(context.extensionPath, 'webviews', 'report-vis'));
                     const panel = vscode.window.createWebviewPanel(
-                        'parallel-coordinate',
-                        'Parallel Coordinate',
+                        'report-vis',
+                        'Report Vis',
                         vscode.ViewColumn.Beside,
                         {
                             enableScripts: true,
@@ -135,11 +135,6 @@ export class MyCommands {
                 }
 
                 const webview = MyCommands.parallelCoordinatePanel.webview;
-                setTimeout(() => {
-                    webview.postMessage({
-                        cloneReport: cloneReport
-                    });
-                }, 100);
             }
         };
     }
