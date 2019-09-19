@@ -77,7 +77,8 @@ def match_clones_in_previous_and_new_revisions(adjusted_start_line: int, adjuste
                 done_for_current_clone = True
         # if the calculated line number matches with a clone in the new revision
         # TODO for now it is an exact matching, may be improved
-        elif clone_in_new_revision.start_line == adjusted_start_line and clone_in_new_revision.end_line == adjusted_end_line:
+        elif (min(clone_in_new_revision.end_line, adjusted_end_line) - max(clone_in_new_revision.start_line, adjusted_start_line)) / (clone_in_new_revision.end_line - clone_in_new_revision.start_line) >= 0.8: 
+        # elif clone_in_new_revision.start_line == adjusted_start_line and clone_in_new_revision.end_line == adjusted_end_line:
             assign_global_id(revision_id, clone_in_new_revision, clone_in_previous_revision)
             # if this is not the last clone in the previous revison or this is the last clone in the new revision
             if sorted_clone_key_in_previous_revision_in_changed_file[-1] != clone_in_previous_revision.start_line or sorted_clone_key_in_new_revision_in_changed_file[-1] == key_clone_in_new_revision:
