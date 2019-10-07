@@ -47,6 +47,11 @@ function generateParallelCoordinate(changeCountData) {
 
     const dimensions = generateDimensions(pc, cloneReport.info.minRevision, cloneReport.info.maxRevision, changeCountData);
 
+
+    vscode.postMessage({
+        command: 'aaaaa'
+    });
+
     pc
         .data(changeCountData)
         .dimensions(dimensions)
@@ -70,7 +75,7 @@ function generateParallelCoordinate2(changeCountData) {
         .color('blue')
         .alphaOnBrushed(.35)
         .brushedColor('red')
-        // .on('brush', getParallelCoordinateBrushHandler());
+    // .on('brush', getParallelCoordinateBrushHandler());
 
     let classIdData = [];
     for (const changeCountDatum of changeCountData) {
@@ -171,13 +176,34 @@ function generateHeatmap(changeCountData) {
 
 function generateChangeCountData() {
     const data = [];
+    const globalIdList = Array.from(Object.keys(cloneReport.globalIdDictionary)).sort((a, b) => {
+        const cloneA = cloneReport.globalIdDictionary[a];
+        const cloneACount = Array.from(Object.values(cloneA)).reduce((x, y) => +x | 0 + +y.addition_count + +y.deletion_count);
+        const cloneB = cloneReport.globalIdDictionary[b];
+        const cloneBCount = Array.from(Object.values(cloneB)).reduce((x, y) => +x | 0 + +y.addition_count + +y.deletion_count);
+        return cloneBCount - cloneACount;
+    })
 
-    for (const globalId of Array.from(Object.keys(cloneReport.globalIdDictionary))) {
+    for (const globalId of globalIdList.splice(0, 100)) {
         const revisionsNode = cloneReport.globalIdDictionary[globalId];
         const temp = {};
 
         for (let i = cloneReport.info.minRevision; i <= cloneReport.info.maxRevision; i++) {
-            temp[i] = revisionsNode[i] ? revisionsNode[i].change_count : Number.NEGATIVE_INFINITY;
+            // let addtionCount = revisionsNode[i] ? revisionsNode[i].addition_count : Number.NEGATIVE_INFINITY;
+            // let deletionCount = revisionsNode[i] ? revisionsNode[i].deletion_count : Number.NEGATIVE_INFINITY;
+            // if (addtionCount > 0 && deletionCount > 0) {
+            //     temp[i] = 3;
+            // } else if (addtionCount > 0) {
+            //     temp[i] = 2;
+            // } else if (deletionCount > 0) {
+            //     temp[i] = 1;
+            // } else if (addtionCount == 0 && deletionCount == 0) {
+            //     temp[i] = 0;
+            // } else {
+            //     temp[i] = Number.NEGATIVE_INFINITY;
+            // }
+            temp[i + 'a'] = revisionsNode[i] ? revisionsNode[i].addition_count : Number.NEGATIVE_INFINITY;
+            temp[i + 'd'] = revisionsNode[i] ? revisionsNode[i].deletion_count : Number.NEGATIVE_INFINITY;
         }
         temp.id = globalId.toString();
         data.push(temp);
@@ -194,7 +220,12 @@ function generateDimensions(pc, minRevision, maxRevision, data) {
 
     for (let i = minRevision; i <= maxRevision; i++) {
         if (checkIfThisRevisionHasChangedClones(i, data) || i == maxRevision) {
-            dimensions[i] = {
+            dimensions[i + 'a'] = {
+                type: 'number',
+                yscale: scale,
+                ticks: 0
+            };
+            dimensions[i + 'd'] = {
                 type: 'number',
                 yscale: scale,
                 ticks: 0
@@ -202,10 +233,10 @@ function generateDimensions(pc, minRevision, maxRevision, data) {
         }
     }
 
-    dimensions[d3.min(Object.keys(dimensions), d => parseInt(d))].ticks = 5;
-    dimensions[d3.min(Object.keys(dimensions), d => parseInt(d))].orient = 'left';
-    dimensions[d3.max(Object.keys(dimensions), d => parseInt(d))].ticks = 5;
-    dimensions[d3.max(Object.keys(dimensions), d => parseInt(d))].orient = 'right';
+    // dimensions[d3.min(Object.keys(dimensions), d => parseInt(d))].ticks = 5;
+    // dimensions[d3.min(Object.keys(dimensions), d => parseInt(d))].orient = 'left';
+    // dimensions[d3.max(Object.keys(dimensions), d => parseInt(d))].ticks = 5;
+    // dimensions[d3.max(Object.keys(dimensions), d => parseInt(d))].orient = 'right';
     dimensions.id = {
         type: 'string',
         ticks: 0,
@@ -260,13 +291,13 @@ function getSameClassClonesFilter(queriedClone) {
 }
 
 function getCloneInLastRevisionFilter() {
-    return d => d[cloneReport.info.maxRevision] >= 0;
+    return d => d[cloneReport.info.maxRevision + 'a'] >= 0 || d[cloneReport.info.maxRevision + 'd'] >= 0;
 }
 
 function getOnlyChangedCloneFilter() {
     return d => {
         for (let i = 0; i <= cloneReport.info.maxRevision; i++) {
-            if (d[i] > 0) {
+            if (d[i + 'a'] > 0 || d[i + 'd'] > 0) {
                 return true;
             }
         }
@@ -276,7 +307,10 @@ function getOnlyChangedCloneFilter() {
 
 function checkIfThisRevisionHasChangedClones(revisionId, data) {
     for (const datum of data) {
-        if (datum[revisionId] > 0 || (datum[revisionId] == 0 && revisionId >= 0 && datum[revisionId - 1] < 0)) {
+        if (datum[revisionId + 'a'] > 0 || (datum[revisionId + 'a'] == 0 && revisionId >= 0 && datum[(revisionId - 1) + 'a'] < 0)) {
+            return true;
+        }
+        if (datum[revisionId + 'd'] > 0 || (datum[revisionId + 'd'] == 0 && revisionId >= 0 && datum[(revisionId - 1) + 'd'] < 0)) {
             return true;
         }
     }

@@ -122,9 +122,10 @@ def handle_single_change_record(change_log: Sequence[str], clone_in_previous_rev
     elif is_change_info_still_in_same_file and change_info.line <= adjusted_end_line + 1:
         if change_info.operation == "+":
             clone_line_offset += 1
+            clone_in_previous_revision.addition_count += 1
         elif change_info.operation == "-":
             clone_line_offset -= 1
-        clone_in_previous_revision.change_count += 1
+            clone_in_previous_revision.deletion_count += 1
     # after the clone's range
     else:
         # insert the popped item back

@@ -93,6 +93,8 @@ format-git-diff() {
 # 740 - 21 - 6c4fd0e
 
 INPUT_FILE_PATH="$OUTPUT_PATH/temp/revisions"
+# head $INPUT_FILE_PATH > "$OUTPUT_PATH/temp/revisions2"
+# mv "$OUTPUT_PATH/temp/revisions2" $INPUT_FILE_PATH
 REVISION_ID=$(wc -l < $INPUT_FILE_PATH)
 while IFS= read -r COMMIT_ID
 do
@@ -129,6 +131,8 @@ do
   REVISION_ID=`expr $REVISION_ID - 1`
   PREVIOUS_COMMIT_ID=$COMMIT_ID
 done < "$INPUT_FILE_PATH"
+
+(cd "$SOURCE_DIRECTORY" && git checkout master) > /dev/null 2>&1
 
 python3 ./mapping.py "systems/source" 0  `expr $REVISION_COUNT - 1` "$OUTPUT_PATH/temp/reports" "$OUTPUT_PATH/temp/changes" "$OUTPUT_PATH"
 

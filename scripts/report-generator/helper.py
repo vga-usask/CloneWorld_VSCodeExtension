@@ -2,8 +2,8 @@ import xmltodict
 import json
 
 class CloneInfo(dict):
-    def __init__(self, class_id: int, pcid: int, file: str, start_line: int, end_line: int, global_id: int = -1, change_count: int = 0):
-        dict.__init__(self, class_id = class_id, pcid = pcid, file = file, start_line = start_line, end_line = end_line, global_id = global_id, change_count = change_count)
+    def __init__(self, class_id: int, pcid: int, file: str, start_line: int, end_line: int, global_id: int = -1, addition_count: int = 0, deletion_count: int = 0):
+        dict.__init__(self, class_id = class_id, pcid = pcid, file = file, start_line = start_line, end_line = end_line, global_id = global_id, addition_count = addition_count, deletion_count = deletion_count)
     
     @property
     def class_id(self):
@@ -48,11 +48,18 @@ class CloneInfo(dict):
         self["global_id"] = value
     
     @property
-    def change_count(self):
-        return self["change_count"]
-    @change_count.setter
-    def change_count(self, value):
-        self["change_count"] = value
+    def addition_count(self):
+        return self["addition_count"]
+    @addition_count.setter
+    def addition_count(self, value):
+        self["addition_count"] = value
+
+    @property
+    def deletion_count(self):
+        return self["deletion_count"]
+    @deletion_count.setter
+    def deletion_count(self, value):
+        self["deletion_count"] = value
 
 
 class ChangeInfo:
