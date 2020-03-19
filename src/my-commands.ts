@@ -89,7 +89,7 @@ export class MyCommands {
                 if (MyCommands.parallelCoordinatePanel) {
                     MyCommands.parallelCoordinatePanel.reveal();
                 } else {
-                    const onDiskPath = vscode.Uri.file(path.join(context.extensionPath, 'webviews', 'report-vis'));
+                    const onDiskPath = vscode.Uri.file(path.join(context.extensionPath, 'webviews', 'parsets-vis'));
                     const panel = vscode.window.createWebviewPanel(
                         'report-vis',
                         'Report Vis',
@@ -126,6 +126,8 @@ export class MyCommands {
                                         cloneReport: MyCommands.obtainCloneReport(reportPath)
                                     });
                                     break;
+                                case 'alert':
+                                    vscode.window.showInformationMessage(message.content);
                             }
                         },
                         undefined,
